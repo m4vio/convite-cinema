@@ -21,11 +21,13 @@
         }
         .container {
             max-width: 500px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.05);
             padding: 30px;
             border-radius: 15px;
             border: 2px solid #e23636;
             box-shadow: 0 0 20px rgba(226, 54, 54, 0.3);
+            box-sizing: border-box;
         }
         h1 {
             color: #ff3333;
@@ -42,34 +44,41 @@
             color: #4ba3ff;
             font-weight: bold;
         }
+        /* Esta área agora limita o espaço onde os botões podem se mover */
         .botoes {
             position: relative;
             width: 100%;
-            height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            margin-top: 20px;
+            height: 200px; /* Espaço seguro para o botão correr lá dentro */
+            margin-top: 25px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2); /* Fundo sutil para ver a área */
         }
         button {
-            padding: 15px 35px;
+            padding: 12px 28px;
             font-size: 18px;
             font-weight: bold;
             border: none;
             border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: absolute; /* Ambos agora usam posicionamento controlado */
         }
         #sim {
             background-color: #28a745;
             color: white;
+            /* Fixa o botão SIM no lado esquerdo do meio */
+            left: 20%;
+            top: 50%;
+            transform: translateY(-50%);
         }
         #nao {
             background-color: #dc3545;
             color: white;
-            position: absolute;
-            transition: 0.1s ease;
+            /* Posição inicial no lado direito do meio */
+            right: 20%;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.12s ease;
             z-index: 10;
         }
     </style>
@@ -83,7 +92,7 @@
         
         <p class="destaque">e melhor: por minha conta!!! 🤑</p>
 
-        <div class="botoes">
+        <div class="botoes" id="areaBotoes">
             <button id="sim" onclick="aceitou()">Sim!</button>
             <button id="nao" onmouseover="fugir()" onclick="fugir()">Não</button>
         </div>
@@ -92,19 +101,27 @@
     <script>
         function fugir() {
             var botaoNao = document.getElementById("nao");
+            var area = document.getElementById("areaBotoes");
             
-            var larguraJanela = window.innerWidth - 120;
-            var alturaJanela = window.innerHeight - 80;
+            // Remove as propriedades iniciais de alinhamento
+            botaoNao.style.right = "auto";
+            botaoNao.style.transform = "none";
             
-            var aleatorioX = Math.max(10, Math.random() * larguraJanela);
-            var aleatorioY = Math.max(10, Math.random() * alturaJanela);
+            // Calcula o espaço máximo baseado APENAS na caixinha cinza dos botões
+            var larguraMaxima = area.clientWidth - botaoNao.offsetWidth;
+            var alturaMaxima = area.clientHeight - botaoNao.offsetHeight;
             
+            // Gera a nova posição restrita a esse espaço
+            var aleatorioX = Math.floor(Math.random() * larguraMaxima);
+            var aleatorioY = Math.floor(Math.random() * alturaMaxima);
+            
+            // Aplica o movimento dentro da caixa do convite
             botaoNao.style.left = aleatorioX + "px";
             botaoNao.style.top = aleatorioY + "px";
         }
 
         function aceitou() {
-            alert("sabia que nao iria recusar bb!! 🍿🎬");
+            alert("sabia que voce nao ia recusar bb, te vejo la!! 🍿🎬");
         }
     </script>
 
